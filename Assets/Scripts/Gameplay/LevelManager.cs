@@ -41,7 +41,7 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         // Play BGM
-        audioMng.Play("bg");
+        audioMng.Play("sfx_ambience");
 
         // Lock and Hide the Cursor
         Cursor.visible = false;
@@ -50,6 +50,7 @@ public class LevelManager : MonoBehaviour
 
     public void ObtainedKey()
     {
+        Debug.Log(collectedKeys+1 + " :: " + totalKeys);
         if (++collectedKeys == totalKeys)
         {
             finishPortal.TurnOn();

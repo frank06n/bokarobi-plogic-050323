@@ -2822,43 +2822,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sounds:
   - audioType: 1
-    clip: {fileID: 8300000, guid: 2c115055d4992464bb69e4de2e584d66, type: 3}
-    volume: 1
-    loop: 0
-    source: {fileID: 0}
-  - audioType: 0
-    clip: {fileID: 8300000, guid: 36d98920beaad894e8701d77fe54a9dd, type: 3}
-    volume: 1
-    loop: 0
-    source: {fileID: 0}
-  - audioType: 0
-    clip: {fileID: 8300000, guid: 4f43e60404c6cb344bb7f395b4b460e7, type: 3}
+    clip: {fileID: 8300000, guid: f7f1f9f6572859740a279763298eb237, type: 3}
     volume: 1
     loop: 0
     source: {fileID: 0}
   - audioType: 1
-    clip: {fileID: 8300000, guid: a5f56bfc5cf5a834db9b375ffab4111c, type: 3}
+    clip: {fileID: 8300000, guid: 47cc1dcb9aa121540ab4269367fac294, type: 3}
     volume: 0.528
     loop: 1
     source: {fileID: 0}
   - audioType: 0
-    clip: {fileID: 8300000, guid: 1936a132a67eb1d49ad07b7d81fc16f3, type: 3}
+    clip: {fileID: 8300000, guid: 2f52b1d5b19239447b047616df56b0ce, type: 3}
     volume: 0.579
     loop: 1
     source: {fileID: 0}
   - audioType: 0
-    clip: {fileID: 8300000, guid: 7088184188ec2ac42b52bbea0eaf9349, type: 3}
+    clip: {fileID: 8300000, guid: 4109657621bbf61479a00427769c9df6, type: 3}
     volume: 1
     loop: 0
     source: {fileID: 0}
   - audioType: 0
-    clip: {fileID: 8300000, guid: 1628aeb4a087e0743bd3e5a191e7637d, type: 3}
+    clip: {fileID: 8300000, guid: 1a66bcfb2463f8b4e9ef9420d9fff40f, type: 3}
     volume: 1
     loop: 0
     source: {fileID: 0}
   - audioType: 0
-    clip: {fileID: 8300000, guid: ff11fb23fe12a0149864fb9b09ba6570, type: 3}
+    clip: {fileID: 8300000, guid: 2c07462296fd6a54ba2888d3ee59a4ba, type: 3}
     volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - audioType: 0
+    clip: {fileID: 8300000, guid: f35b0a6fa5df3b040a1fe3ea91e52160, type: 3}
+    volume: 1
+    loop: 0
+    source: {fileID: 0}
+  - audioType: 0
+    clip: {fileID: 8300000, guid: b042190bb0402b2498a4c50b847f0186, type: 3}
+    volume: 0.553
     loop: 0
     source: {fileID: 0}
   musicMixerGroup: {fileID: 796045516698340167, guid: 6346f6f1268bc5f4885676093df5e52c, type: 2}
@@ -5077,7 +5077,7 @@ GameObject:
   - component: {fileID: 1836111121}
   - component: {fileID: 1836111125}
   - component: {fileID: 1836111126}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Victory Orb
   m_TagString: win
   m_Icon: {fileID: 0}

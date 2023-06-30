@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
         canDoubleJump = false;
         wasWalking = false;
 
-        camTransform = UnityEngine.Camera.main.transform;
+        camTransform = Camera.main.transform;
     }
 
     void Update()
@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!isGrounded || (inputX == 0 && inputY ==0))
             {
-                LevelManager.instance.audioMng.Stop("walk");
+                LevelManager.instance.audioMng.Stop("sfx_walk");
                 wasWalking = false;
             }
         }
@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
         {
             if (isGrounded && (inputX != 0 || inputY != 0))
             {
-                LevelManager.instance.audioMng.Play("walk");
+                LevelManager.instance.audioMng.Play("sfx_walk");
                 wasWalking = true;
             }
         }
@@ -105,9 +105,10 @@ public class PlayerController : MonoBehaviour
 
     void CheckJump()
     {
-        if (isGrounded)
+        if (isGrounded && jumping)
         {
             jumping = doubleJumping = false;
+            LevelManager.instance.audioMng.Play("sfx_jump_impact");
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -116,13 +117,13 @@ public class PlayerController : MonoBehaviour
             {
                 jumping = true;
                 velocity = Vector3.up * Mathf.Sqrt(2 * LevelManager.instance.Gravity * jumpHeight);
-                LevelManager.instance.audioMng.Play("jump");
+                LevelManager.instance.audioMng.Play("sfx_jump");
             }
             else if (jumping && !doubleJumping && canDoubleJump)
             {
                 doubleJumping = true;
                 velocity = Vector3.up * Mathf.Sqrt(2 * LevelManager.instance.Gravity * jumpHeight);
-                LevelManager.instance.audioMng.Play("jump");
+                LevelManager.instance.audioMng.Play("sfx_jump");
                 //play double jump sfx
             }
         }
@@ -149,22 +150,22 @@ public class PlayerController : MonoBehaviour
         {
             if (LevelManager.instance.IsPortalOn())
             {
-                LevelManager.instance.audioMng.Play("end2");
-                LevelManager.instance.audioMng.Stop("bg");
+                LevelManager.instance.audioMng.Play("sfx_victory");
+                //LevelManager.instance.audioMng.Stop("bg");
                 StartCoroutine(LevelManager.instance.DieAfter(4)); // 23
             }
         }
         else if (hit.gameObject.tag == "pickup_dj")
         {
             // sfx double jump pickup collected
-            LevelManager.instance.audioMng.Play("pickup_dj");
+            LevelManager.instance.audioMng.Play("sfx_dj_picked");
             canDoubleJump = true;
             Destroy(hit.gameObject);
         }
         else if (hit.gameObject.tag == "pickup_sp")
         {
             // sfx double jump pickup collected
-            LevelManager.instance.audioMng.Play("pickup_sp");
+            LevelManager.instance.audioMng.Play("sfx_sp_picked");
             LevelManager.instance.ObtainedKey();// add score
             Destroy(hit.gameObject);
         }

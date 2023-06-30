@@ -28,5 +28,6 @@ public class FinishPortalLogic : MonoBehaviour
         renderer.material = onMat;
         psystem.SetActive(true);
         hover.enabled = true;
+        LevelManager.instance.audioMng.Play("sfx_orb_active");
     }
 }

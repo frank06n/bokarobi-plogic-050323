@@ -50,7 +50,7 @@ public class LevelManager : MonoBehaviour
 
     public void ObtainedKey()
     {
-        Debug.Log(collectedKeys+1 + " :: " + totalKeys);
+        //Debug.Log(collectedKeys+1 + " :: " + totalKeys);
         if (++collectedKeys == totalKeys)
         {
             finishPortal.TurnOn();

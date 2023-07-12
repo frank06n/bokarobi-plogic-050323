@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -23,6 +24,11 @@ public class PlayerController : MonoBehaviour
     private bool jumping;
     private bool doubleJumping;
 
+    public AnimationCurve jumpPauseCurve;
+    public Transform leftHand, rightHand;
+    private Vector3 initLRot, initRRot;
+    private float t = 0;
+
     void Awake()
     {
         gameover = false;
@@ -31,6 +37,9 @@ public class PlayerController : MonoBehaviour
         wasWalking = false;
 
         camTransform = Camera.main.transform;
+
+        initLRot = leftHand.localRotation.eulerAngles;
+        initRRot = rightHand.localRotation.eulerAngles;
     }
 
     void Update()
@@ -101,6 +110,16 @@ public class PlayerController : MonoBehaviour
         }
 
         controller.Move(velocity * Time.deltaTime);
+
+        leftHand.localRotation = Quaternion.Euler(initLRot +
+            Vector3.LerpUnclamped(Vector3.zero, 15 * Vector3.right,
+            Mathf.Sin(t * 8)));
+        rightHand.localRotation = Quaternion.Euler(initRRot +
+            Vector3.LerpUnclamped(Vector3.zero, 15 * Vector3.right,
+            Mathf.Sin(3.14f + t * 8)));
+
+        if (wasWalking)
+            t += Time.deltaTime;
     }
 
     void CheckJump()
@@ -108,6 +127,8 @@ public class PlayerController : MonoBehaviour
         if (isGrounded && jumping)
         {
             jumping = doubleJumping = false;
+            float fcx = (-velocity.y / 15f); // factor
+            StartCoroutine(JumpShake(0.6f, 0.1f * fcx*fcx));
             LevelManager.instance.audioMng.Play("sfx_jump_impact");
         }
 
@@ -138,9 +159,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    IEnumerator JumpShake(float duration, float magnitude)
+    {
+        Vector3 OriginalPos = camTransform.localPosition;
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+
+            camTransform.localPosition = OriginalPos ;
+
+            camTransform.localPosition = OriginalPos
+                + Vector3.down * magnitude * jumpPauseCurve.Evaluate(elapsed / duration);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        camTransform.localPosition = OriginalPos;
+    }
+
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-
+        Debug.Log("Player hit " + hit.gameObject.tag);
         if (hit.gameObject.tag == "cactus")
         {
             LevelManager.instance.audioMng.Play("dead");
@@ -171,6 +210,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        // if this is pickup, set player picked up
+        if (other.gameObject.tag == "pickup_sp")
+        {
+            // sfx double jump pickup collected
+            LevelManager.instance.audioMng.Play("sfx_sp_picked");
+            LevelManager.instance.ObtainedKey();// add score
+            Destroy(other.gameObject);
+        }
+    }
 
     //private void OnDrawGizmosSelected()
     //{

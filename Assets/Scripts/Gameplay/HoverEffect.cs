@@ -6,6 +6,7 @@ public class HoverEffect : MonoBehaviour
     [SerializeField] private float hoverYChange;
     [SerializeField] private float hoverRate;
     [SerializeField] private bool randomStart;
+    // bool use rigidbody
 
     private Vector3 initialYPos;
     private Vector3 euler;
@@ -28,5 +29,10 @@ public class HoverEffect : MonoBehaviour
         euler.y += rotSpeed * Time.deltaTime * 45;
         transform.rotation = Quaternion.Euler(euler*Mathf.PI);
         delta += Time.deltaTime;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // if this is pickup, set player picked up
     }
 }

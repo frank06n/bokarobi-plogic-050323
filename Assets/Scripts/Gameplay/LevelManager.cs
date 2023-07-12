@@ -70,6 +70,6 @@ public class LevelManager : MonoBehaviour
         yield return new WaitForSeconds(t);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

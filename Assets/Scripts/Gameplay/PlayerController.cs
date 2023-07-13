@@ -3,15 +3,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Transform camTransform;
-
-    public AnimationCurve jumpPauseCurve;
-    public Transform leftHand, rightHand;
+    private PlayerMove pmv;
 
     void Awake()
     {
-        camTransform = Camera.main.transform;
-
+        pmv = GetComponent<PlayerMove>();
     }
 
     void Update()
@@ -27,23 +23,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    IEnumerator JumpShake(float duration, float magnitude)
-    {
-        Vector3 OriginalPos = camTransform.localPosition;
-        float elapsed = 0.0f;
-        while (elapsed < duration)
-        {
-
-            camTransform.localPosition = OriginalPos ;
-
-            camTransform.localPosition = OriginalPos
-                + Vector3.down * magnitude * jumpPauseCurve.Evaluate(elapsed / duration);
-
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        camTransform.localPosition = OriginalPos;
-    }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
@@ -66,7 +45,7 @@ public class PlayerController : MonoBehaviour
         {
             // sfx double jump pickup collected
             LevelManager.instance.audioMng.Play("sfx_dj_picked");
-            //canDoubleJump = true;
+            pmv.SetDoubleJump(true);
             Destroy(hit.gameObject);
         }
         else if (hit.gameObject.tag == "pickup_sp")

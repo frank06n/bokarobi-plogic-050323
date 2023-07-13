@@ -8,15 +8,25 @@ public class PlayerMove : MonoBehaviour
 
     private Vector3 velocity;
 
-    [SerializeField] private float speed;
-    [SerializeField] private float jumpHeight;
-    [SerializeField] private float sphereRadius;
-    [SerializeField] private float footYoffset;
+    [SerializeField] private float Speed;
 
-    [SerializeField] private Transform handsTransform;
+    [Header("Ground Check Config")]
+    [SerializeField] private float gc_SphereRadius;
+    [SerializeField] private float gc_FootOffsetY;
+
+    [Header("Jump Config")]
+    [SerializeField] private float JumpHeight;
+    [SerializeField] private AnimationCurve JumpShakeCurve;
+    [SerializeField] private float JumpShakeDuration;
+    [SerializeField] private float JumpShakeMagnitude;
+    [SerializeField] private float JumpBufferTime;
+    [SerializeField] private float J_PauseMinVel;
+    [SerializeField] private float J_PauseMaxVel;
+    [SerializeField] private float J_PauseMax;
+
+    private Transform handsTransform;
     private Transform handsL;
     private Transform handsR;
-    [SerializeField] private Vector3 offset;
     private Transform camTransform;
 
     private bool isWalking;
@@ -24,6 +34,8 @@ public class PlayerMove : MonoBehaviour
     private bool canDoubleJump;
     private bool jumping;
     private bool doubleJumping;
+
+    private bool bufferedJump;
 
     private float jumpPause = 0f;
     private Vector3 handsEulerL;
@@ -38,7 +50,8 @@ public class PlayerMove : MonoBehaviour
         canDoubleJump = false;
         isWalking = false;
 
-        camTransform = Camera.main.transform;
+        camTransform = transform.GetChild(1);
+        handsTransform = transform.GetChild(2);
 
         handsL = handsTransform.GetChild(0);
         handsR = handsTransform.GetChild(1);
@@ -51,20 +64,17 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         isGrounded = IsPlayerGrounded();
-        if (jumpPause>0f)
+        if (CheckJump())
         {
-            jumpPause -= Time.deltaTime;
-            return;
+            Move();
         }
-        CheckJump();
-        Move();
         //CheckFallToDeath();
     }
 
 
     bool IsPlayerGrounded()
     {
-        return Physics.CheckSphere(transform.position + Vector3.up * footYoffset, sphereRadius, LevelManager.instance.Ground) && velocity.y <= 0;
+        return Physics.CheckSphere(transform.position + Vector3.up * gc_FootOffsetY, gc_SphereRadius, LevelManager.instance.Ground) && velocity.y <= 0;
     }
 
     private Vector3 getDirectionInput()
@@ -108,7 +118,7 @@ public class PlayerMove : MonoBehaviour
 
     void Move()
     {
-        velocity = (getDirectionInput() * speed) + (Vector3.up * velocity.y);
+        velocity = (getDirectionInput() * Speed) + (Vector3.up * velocity.y);
         if (!isGrounded) applyGravity();
         controller.Move(velocity * Time.deltaTime);
 
@@ -116,33 +126,80 @@ public class PlayerMove : MonoBehaviour
         handBobbing();
     }
 
-    void CheckJump()
+    void onJumpLanded()
     {
-        if (isGrounded && jumping)
-        {
-            jumping = doubleJumping = false;
-            //float fcx = (-velocity.y / 15f); // factor
-            //StartCoroutine(JumpShake(0.6f, 0.1f * fcx*fcx));
-            LevelManager.instance.audioMng.Play("sfx_jump_impact");
-            jumpPause = 0.5f;
-        }
+        jumping = doubleJumping = false;
+        StartCoroutine(JumpShake());
+        LevelManager.instance.audioMng.Play("sfx_jump_impact");
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        float vel = velocity.magnitude;
+        if (vel > J_PauseMinVel)
         {
-            if (isGrounded)
-            {
-                jumping = true;
-                velocity = Vector3.up * Mathf.Sqrt(2 * LevelManager.instance.Gravity * jumpHeight);
-                LevelManager.instance.audioMng.Play("sfx_jump");
-            }
-            else if (jumping && !doubleJumping && canDoubleJump)
-            {
-                doubleJumping = true;
-                velocity = Vector3.up * Mathf.Sqrt(2 * LevelManager.instance.Gravity * jumpHeight);
-                LevelManager.instance.audioMng.Play("sfx_jump");
-                //play double jump sfx
-            }
+            jumpPause = Mathf.Lerp(0f, J_PauseMax, (vel - J_PauseMinVel) / J_PauseMaxVel);
         }
     }
+    void performJump()
+    {
+        jumping = true;
+        velocity = Vector3.up * Mathf.Sqrt(2 * LevelManager.instance.Gravity * JumpHeight);
+        LevelManager.instance.audioMng.Play("sfx_jump");
+    }
+    void performDoubleJump()
+    {
+        doubleJumping = true;
+        velocity = Vector3.up * Mathf.Sqrt(2 * LevelManager.instance.Gravity * JumpHeight);
+        LevelManager.instance.audioMng.Play("sfx_jump");
+        //play double jump sfx
+    }
+    bool CheckJump()
+    {
+        bool jumpPressed = Input.GetKeyDown(KeyCode.Space);
 
+        if (jumpPause>0f)
+        {
+            jumpPause -= Time.deltaTime;
+            if (jumpPause <= JumpBufferTime && jumpPressed) bufferedJump = true;
+            return false;
+        }
+
+        if (isGrounded && jumping) onJumpLanded();
+
+        if ((jumpPressed && isGrounded) || bufferedJump)
+        {
+            bufferedJump = false;
+            performJump();
+        }
+        else if (jumpPressed && jumping && !doubleJumping && canDoubleJump)
+        {
+            performDoubleJump();
+        }
+
+        return true;
+    }
+
+
+    IEnumerator JumpShake()
+    {
+        float magnitude = JumpShakeMagnitude * velocity.y / -100f;
+        float elapsed = 0;
+        Vector3 OriginalPos = camTransform.localPosition; // assuming [camera, hands] same local pos
+
+        while (elapsed < JumpShakeDuration)
+        {
+            Vector3 offset = Vector3.down * magnitude * JumpShakeCurve.Evaluate(elapsed / JumpShakeDuration);
+            
+            camTransform.localPosition = OriginalPos + offset;
+            handsTransform.localPosition = OriginalPos + 1.2f*offset;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        camTransform.localPosition = OriginalPos;
+        handsTransform.localPosition = OriginalPos;
+    }
+
+    public void SetDoubleJump(bool can)
+    {
+        canDoubleJump = can;
+    }
 }

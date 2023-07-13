@@ -12,7 +12,6 @@ public class PlayerLook : MonoBehaviour
 
     private float camRotVert = 0f;
     private Vector3 handsRotSVel; // hands rotating smooth velocity
-    private float camYSVel; // camera Y smooth velocity
 
     // Start is called before the first frame update
     void Awake()
@@ -28,15 +27,6 @@ public class PlayerLook : MonoBehaviour
 
     private void LateUpdate ()
     {
-        //camTransform.position = transform.position + offset;
-        Vector3 camPos = camTransform.position;
-        camPos.x = transform.position.x + offset.x;
-        camPos.z = transform.position.z + offset.z;
-        camPos.y = Mathf.SmoothDamp(camPos.y, transform.position.y + offset.y,
-            ref camYSVel, 0.05f);
-        camTransform.position = camPos;
-        handsTransform.position = transform.position + offset;
-
         handsTransform.forward = Vector3.SmoothDamp(handsTransform.forward, camTransform.forward, ref handsRotSVel, 0.05f);
     }
 
@@ -51,7 +41,7 @@ public class PlayerLook : MonoBehaviour
 
         Vector3 camEuler = camTransform.eulerAngles;
         camEuler.x = camRotVert;
-        camEuler.y += inputX;
+        //camEuler.y += inputX;
         camEuler.z = 0;
         camTransform.eulerAngles = camEuler;
 
@@ -59,6 +49,5 @@ public class PlayerLook : MonoBehaviour
 
 
         transform.Rotate(Vector3.up * inputX);
-
     }
 }

@@ -2,37 +2,33 @@ using UnityEngine;
 
 public class HoverEffect : MonoBehaviour
 {
-    [SerializeField] private float rotSpeed;
-    [SerializeField] private float hoverYChange;
-    [SerializeField] private float hoverRate;
-    [SerializeField] private bool randomStart;
-    // bool use rigidbody
+    [SerializeField] private float rotationSpeed;
+    [SerializeField] private float hoverSpeed;
+    [SerializeField] private float maxYChange;
+    [SerializeField] private bool randomizeInitialState;
 
-    private Vector3 initialYPos;
-    private Vector3 euler;
-    private float delta;
+    private Vector3 initialPosition;
+    private Vector3 eulerAngles;
+    private float timeElapsed;
     
     void Awake()
     {
-        initialYPos = transform.position;
-        euler = transform.rotation.eulerAngles;
-        if (randomStart)
+        initialPosition = transform.position;
+        eulerAngles = transform.rotation.eulerAngles;
+
+        if (randomizeInitialState)
         {
-            delta = Random.Range(1f, 4f);
-            euler.y += delta*45;
+            timeElapsed = Random.Range(1f, 4f);
         }
     }
 
     void Update()
     {
-        transform.position = initialYPos + Vector3.up * hoverYChange * Mathf.Sin(hoverRate * delta);
-        euler.y += rotSpeed * Time.deltaTime * 45;
-        transform.rotation = Quaternion.Euler(euler*Mathf.PI);
-        delta += Time.deltaTime;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        // if this is pickup, set player picked up
+        transform.position = initialPosition + Vector3.up * maxYChange * Mathf.Sin(hoverSpeed * timeElapsed);
+        
+        eulerAngles.y += rotationSpeed * Time.deltaTime * 45;
+        transform.rotation = Quaternion.Euler(eulerAngles*Mathf.PI);
+        
+        timeElapsed += Time.deltaTime;
     }
 }

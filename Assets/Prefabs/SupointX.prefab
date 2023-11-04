@@ -46,10 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 204b3acc70c005d46917b977e72efcd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotSpeed: 1
-  hoverYChange: 0.2
-  hoverRate: 2
-  randomStart: 1
+  rotationSpeed: 1
+  hoverSpeed: 2
+  maxYChange: 0.2
+  randomizeInitalState: 1
 --- !u!65 &4389379804682317584
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -2,99 +2,80 @@ using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
-
-[System.Serializable]
-public class Sound
+public enum Audio
 {
-    public enum AudioTypes { sfx, music }
-    public AudioTypes audioType;
-
-    public AudioClip clip;
-
-    [Range(0f, 1f)]
-    public float volume;
-
-    public bool loop;
-
-    [HideInInspector]
-    public AudioSource source;
+    JUMP, JUMP_IMPACT, WALK, KEY_PICKED, DOUBLEJUMP_PICKED, ORB_ACTIVE,
+    M_AMBIENCE, M_VICTORY
 }
+
 
 public class AudioManager : MonoBehaviour
 {
 
     [SerializeField]
-    public Sound[] sounds;
+    public AudioClip[] clips;
+    private AudioSource[] sources;
 
     [SerializeField] private AudioMixerGroup musicMixerGroup;
     [SerializeField] private AudioMixerGroup sfxMixerGroup;
 
-    private bool ready = false;
-
     public static AudioManager instance;
     void Awake()
     {
-
-        if (instance == null)
-        {
-            instance = this;
-        }
+        if (instance == null) instance = this;
         else
         {
             Destroy(gameObject);
             return;
         }
 
-        foreach (Sound s in sounds)
+        GenerateAudioSources();
+    }
+
+    private void GenerateAudioSources()
+    {
+        string[] names = Enum.GetNames(typeof(Audio));
+        sources = new AudioSource[names.Length];
+
+        for (int i=0; i < names.Length; i++)
         {
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
-            s.source.volume = s.volume;
-            s.source.loop = s.loop;
-
-            switch (s.audioType)
-            {
-                case Sound.AudioTypes.sfx:
-                    s.source.outputAudioMixerGroup = sfxMixerGroup;
-                    break;
-
-                case Sound.AudioTypes.music:
-                    s.source.outputAudioMixerGroup = musicMixerGroup;
-                    break;
-            }
+            sources[i] = gameObject.AddComponent<AudioSource>();
+            sources[i].clip = GetClipByName(names[i]);
+            sources[i].outputAudioMixerGroup = sfxMixerGroup;
         }
-
-        ready = true;
     }
 
-    private AudioSource GetSource(string name)
+    private AudioClip GetClipByName(string name)
     {
-        if (!ready) return null;
-
-        Sound s = Array.Find(sounds, sound => sound.clip.name == name);
-        if (s == null)
-        {
-            Debug.LogError($"\"{name}\" sound not found!");
-            return null;
-        }
-        return s.source;
+        foreach (AudioClip clip in clips)
+            if (clip.name.ToUpper().Equals(name))
+                return clip;
+        throw new ArgumentException($"Clip of name {name} not found!");
     }
 
-    public void Play(string name)
+    public void MarkAsMusic(Audio audio)
     {
-        AudioSource s = GetSource(name);
-        if (s) s.Play();
+        sources[(int)audio].outputAudioMixerGroup = musicMixerGroup;
+    }
+    public void SetLooping(Audio audio, bool loop)
+    {
+        sources[(int)audio].loop = loop;
+    }
+    public void SetVolume(Audio audio, float volume)
+    {
+        sources[(int)audio].volume = volume;
     }
 
-    public void Stop(string name)
+    public void Play(Audio audio)
     {
-        AudioSource s = GetSource(name);
-        if (s) s.Stop();
+        sources[(int)audio].Play();
     }
-
-    public float Length(string name)
+    public void Stop(Audio audio)
     {
-        AudioSource s = GetSource(name);
-        return s ? s.clip.length : 0f;
+        sources[(int)audio].Stop();
+    }
+    public float Length(Audio audio)
+    {
+        return sources[(int)audio].clip.length;
     }
 }

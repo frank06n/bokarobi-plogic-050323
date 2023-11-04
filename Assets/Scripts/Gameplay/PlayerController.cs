@@ -1,72 +1,66 @@
-using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private PlayerMove pmv;
+    private PlayerMove playerMove;
+    private FinishPortalLogic finishPortal;
+    private readonly float YDeathThreshold = -100;
 
     void Awake()
     {
-        pmv = GetComponent<PlayerMove>();
+        playerMove = GetComponent<PlayerMove>();
+        finishPortal = FindObjectOfType<FinishPortalLogic>();
     }
 
     void Update()
     {
-        CheckFallToDeath();
+        CheckFallenToDeath();
     }
-    void CheckFallToDeath()
+    void CheckFallenToDeath()
     {
-        if (transform.position.y < -100)
+        if (transform.position.y < YDeathThreshold)
         {
-            //LevelManager.instance.audioMng.Play("falldead");
-            StartCoroutine(LevelManager.instance.DieAfter(0));
+            //PlaySfx("falldead");
+            DieAfter(0);
         }
     }
 
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Debug.Log("Player hit " + hit.gameObject.tag);
-        if (hit.gameObject.tag == "cactus")
+        GameObject hitObject = hit.gameObject;
+
+        if (hitObject.CompareTag(Interactable.Cactus))
         {
-            LevelManager.instance.audioMng.Play("dead");
-            StartCoroutine(LevelManager.instance.DieAfter(1));
+            //play dead sfx
+            DieAfter(1);
         }
-        else if (hit.gameObject.tag == "win")
+        else if (hitObject.CompareTag(Interactable.WinOrb))
         {
-            if (LevelManager.instance.IsPortalOn())
+            if (finishPortal.isOn())
             {
-                LevelManager.instance.audioMng.Play("sfx_victory");
+                AudioManager.instance.Play(Audio.M_VICTORY);
                 //LevelManager.instance.audioMng.Stop("bg");
-                StartCoroutine(LevelManager.instance.DieAfter(4)); // 23
+                DieAfter(4);
             }
         }
-        else if (hit.gameObject.tag == "pickup_dj")
+        else if (hitObject.CompareTag(Interactable.Pickup_DoubleJump))
         {
-            // sfx double jump pickup collected
-            LevelManager.instance.audioMng.Play("sfx_dj_picked");
-            pmv.SetDoubleJump(true);
-            Destroy(hit.gameObject);
+            AudioManager.instance.Play(Audio.DOUBLEJUMP_PICKED);
+            playerMove.SetCanDoubleJump();
+            Destroy(hitObject);
         }
-        else if (hit.gameObject.tag == "pickup_sp")
+        else if (hitObject.CompareTag(Interactable.Pickup_Key))
         {
-            // sfx double jump pickup collected
-            LevelManager.instance.audioMng.Play("sfx_sp_picked");
-            LevelManager.instance.ObtainedKey();// add score
-            Destroy(hit.gameObject);
+            AudioManager.instance.Play(Audio.KEY_PICKED);
+            LevelManager.instance.OnPlayerCollectKey();// add score
+            Destroy(hitObject);
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void DieAfter(float time)
     {
-        // if this is pickup, set player picked up
-        if (other.gameObject.tag == "pickup_sp")
-        {
-            // sfx double jump pickup collected
-            LevelManager.instance.audioMng.Play("sfx_sp_picked");
-            LevelManager.instance.ObtainedKey();// add score
-            Destroy(other.gameObject);
-        }
+        StartCoroutine(LevelManager.instance.DieAfter(time));
     }
 
     //private void OnDrawGizmosSelected()

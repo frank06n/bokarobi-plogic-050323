@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerLook : MonoBehaviour
@@ -8,46 +6,40 @@ public class PlayerLook : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 2f;
     [SerializeField] private Transform handsTransform;
     [SerializeField] private Vector3 offset;
-    private Transform camTransform;
+    private Transform cameraTransform;
 
-    private float camRotVert = 0f;
-    private Vector3 handsRotSVel; // hands rotating smooth velocity
+    private float cameraVerticalRotation = 0f;
+    private Vector3 handsRotationSmoothVelocity;
 
-    // Start is called before the first frame update
     void Awake()
     {
-        camTransform = Camera.main.transform;
+        cameraTransform = Camera.main.transform;
     }
-
-    // Update is called once per frame
     void Update()
     {
-        Look();
+        float inputX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float inputY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+
+        RotateCameraVertically(inputY);
+        RotateHorizontally(inputX);
     }
 
     private void LateUpdate ()
     {
-        handsTransform.forward = Vector3.SmoothDamp(handsTransform.forward, camTransform.forward, ref handsRotSVel, 0.05f);
+        handsTransform.forward = Vector3.SmoothDamp(handsTransform.forward, cameraTransform.forward, ref handsRotationSmoothVelocity, 0.05f);
     }
 
-    void Look()
+    private void RotateCameraVertically(float inputY)
     {
-        // Collect Mouse Input
-        float inputX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float inputY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+        cameraVerticalRotation = Mathf.Clamp(cameraVerticalRotation - inputY, -90f, 90f);
 
-
-        camRotVert = Mathf.Clamp(camRotVert - inputY, -90f, 90f);
-
-        Vector3 camEuler = camTransform.eulerAngles;
-        camEuler.x = camRotVert;
-        //camEuler.y += inputX;
-        camEuler.z = 0;
-        camTransform.eulerAngles = camEuler;
-
-
-
-
+        Vector3 angles = cameraTransform.eulerAngles;
+        angles.x = cameraVerticalRotation;
+        angles.z = 0;
+        cameraTransform.eulerAngles = angles;
+    }
+    private void RotateHorizontally(float inputX)
+    {
         transform.Rotate(Vector3.up * inputX);
     }
 }

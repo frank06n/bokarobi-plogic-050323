@@ -4,30 +4,38 @@ public class FinishPortalLogic : MonoBehaviour
 {
     [SerializeField] private Material offMat, onMat;
     private new Renderer renderer;
-    private GameObject psystem;
-    private HoverEffect hover;
+    private new GameObject particleSystem;
+    private HoverEffect hoverEffect;
+    private bool on;
 
     private void Awake()
     {
         renderer = GetComponent<Renderer>();
-        psystem = transform.GetChild(0).gameObject;
-        hover = GetComponent<HoverEffect>();
+        particleSystem = transform.GetChild(0).gameObject;
+        hoverEffect = GetComponent<HoverEffect>();
     }
 
-    // Start is called before the first frame update
     private void Start()
     {
-        renderer.material = offMat;
-        psystem.SetActive(false);
-        hover.enabled = false;
+        SetState(false);
     }
 
-    // Update is called once per frame
     public void TurnOn()
     {
-        renderer.material = onMat;
-        psystem.SetActive(true);
-        hover.enabled = true;
-        LevelManager.instance.audioMng.Play("sfx_orb_active");
+        SetState(true);
+        AudioManager.instance.Play(Audio.ORB_ACTIVE);
+    }
+
+    private void SetState(bool on)
+    {
+        this.on = on;
+        renderer.material = on ? onMat : offMat;
+        particleSystem.SetActive(on);
+        hoverEffect.enabled = on;
+    }
+
+    public bool isOn()
+    {
+        return on;
     }
 }

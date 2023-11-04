@@ -1,25 +1,28 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+
+public static class Interactable
+{
+    public static readonly string Cactus = "cactus";
+    public static readonly string WinOrb = "win";
+    public static readonly string Pickup_Key = "pickup_sp";
+    public static readonly string Pickup_DoubleJump = "pickup_dj";
+}
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
 
-    public float DeathY;
-    public float Gravity;
-    public LayerMask Ground;
+    public float gravity;
+    public LayerMask ground;
 
     [HideInInspector] public bool gameOver;
 
     private int collectedKeys;
     private int totalKeys;
     private FinishPortalLogic finishPortal;
-    private bool isPortalOn;
-
-
-    [HideInInspector] public AudioManager audioMng;
 
     void Awake()
     {
@@ -29,7 +32,6 @@ public class LevelManager : MonoBehaviour
         }
         instance = this;
 
-        audioMng = FindObjectOfType<AudioManager>();
         finishPortal = FindObjectOfType<FinishPortalLogic>();
 
         gameOver = false;
@@ -40,36 +42,31 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        // Play BGM
-        audioMng.Play("sfx_ambience");
+        AudioManager.instance.MarkAsMusic(Audio.M_AMBIENCE);
+        AudioManager.instance.MarkAsMusic(Audio.M_VICTORY);
 
-        // Lock and Hide the Cursor
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        AudioManager.instance.SetLooping(Audio.M_AMBIENCE, true);
+        AudioManager.instance.Play(Audio.M_AMBIENCE);
+
+        SetCursorVisible(false);
     }
 
-    public void ObtainedKey()
+    public void OnPlayerCollectKey()
     {
-        //Debug.Log(collectedKeys+1 + " :: " + totalKeys);
-        if (++collectedKeys == totalKeys)
-        {
-            finishPortal.TurnOn();
-            isPortalOn = true;
-        }
+        if (++collectedKeys == totalKeys) finishPortal.TurnOn();
     }
-
-    public bool IsPortalOn()
-    {
-        return isPortalOn;
-    }
-
 
     public IEnumerator DieAfter(float t)
     {
         gameOver = true;
         yield return new WaitForSeconds(t);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        SetCursorVisible(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void SetCursorVisible(bool visible)
+    {
+        Cursor.visible = visible;
+        Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
     }
 }

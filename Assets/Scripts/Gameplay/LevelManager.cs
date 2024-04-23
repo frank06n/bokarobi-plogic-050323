@@ -46,6 +46,7 @@ public class LevelManager : MonoBehaviour
         AudioManager.instance.MarkAsMusic(Audio.M_VICTORY);
 
         AudioManager.instance.SetLooping(Audio.M_AMBIENCE, true);
+        AudioManager.instance.SetVolume(Audio.M_AMBIENCE,0.5f);
         AudioManager.instance.Play(Audio.M_AMBIENCE);
 
         SetCursorVisible(false);

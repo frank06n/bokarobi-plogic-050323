@@ -21,9 +21,8 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float JumpShakeMagnitude;
 
     private Transform handsTransform;
-    private Transform handsL;
-    private Transform handsR;
     private Transform cameraTransform;
+    private Animator handsAnimator;
 
     private bool isWalking;
     private bool isGrounded;
@@ -31,9 +30,6 @@ public class PlayerMove : MonoBehaviour
     private bool isJumping;
     private bool isDoubleJumping;
 
-    private Vector3 handsEulerL;
-    private Vector3 handsEulerR;
-    private float bobbingDelta;
 
 
     void Awake()
@@ -42,14 +38,9 @@ public class PlayerMove : MonoBehaviour
         canDoubleJump = false;
         isWalking = false;
 
-        cameraTransform = transform.GetChild(1);
-        handsTransform = transform.GetChild(2);
-
-        handsL = handsTransform.GetChild(0);
-        handsR = handsTransform.GetChild(1);
-
-        handsEulerL = handsL.localEulerAngles;
-        handsEulerR = handsR.localEulerAngles;
+        cameraTransform = transform.GetChild(0);
+        handsTransform = transform.GetChild(1);
+        handsAnimator = handsTransform.GetComponent<Animator>();
     }
 
     void Update()
@@ -63,7 +54,7 @@ public class PlayerMove : MonoBehaviour
         CheckMove();
         CheckWalk();
 
-        if (isWalking) DoHandBobbing();
+        DoHandBobbing();
     }
 
 
@@ -102,17 +93,10 @@ public class PlayerMove : MonoBehaviour
         return Vector3.up * Mathf.Sqrt(2 * LevelManager.instance.gravity * JumpHeight);
     }
 
-
-    private Vector3 _bobFunc(float extent, float time, float offset)
-    {
-        return Vector3.LerpUnclamped(Vector3.zero,
-            extent * Vector3.right, Mathf.Sin(offset + time));
-    }
     private void DoHandBobbing()
     {
-        handsL.localEulerAngles = handsEulerL + _bobFunc(15, bobbingDelta, 0);
-        handsR.localEulerAngles = handsEulerR + _bobFunc(15, bobbingDelta, Mathf.PI);
-        bobbingDelta += Time.deltaTime * 8;
+        handsAnimator.SetBool("Run", isWalking);
+        handsAnimator.SetBool("Jump", isJumping);
     }
 
     void CheckJump()
@@ -138,10 +122,15 @@ public class PlayerMove : MonoBehaviour
         bool wasWalking = isWalking;
         isWalking = IsWalking();
 
-        if (wasWalking != isWalking)
+        // later separate this for another method
+        if (!wasWalking && isWalking)
+        {
             AudioManager.instance.Play(Audio.WALK);
-        else
+        }
+        else if (wasWalking && !isWalking)
+        {
             AudioManager.instance.Stop(Audio.WALK);
+        }
     }
 
     void OnJumpLanded()
@@ -168,20 +157,21 @@ public class PlayerMove : MonoBehaviour
     {
         float magnitude = JumpShakeMagnitude * velocity.y / -100f;
         float elapsed = 0;
-        Vector3 OriginalPos = cameraTransform.localPosition; // assuming [camera, hands] same local pos
+        Vector3 camPos = cameraTransform.localPosition;
+        Vector3 handPos = handsTransform.localPosition;
 
         while (elapsed < JumpShakeDuration)
         {
             Vector3 offset = Vector3.down * magnitude * JumpShakeCurve.Evaluate(elapsed / JumpShakeDuration);
             
-            cameraTransform.localPosition = OriginalPos + offset;
-            handsTransform.localPosition = OriginalPos + 1.2f*offset;
+            cameraTransform.localPosition = camPos + offset;
+            handsTransform.localPosition = handPos + 1.2f * offset;
 
             elapsed += Time.deltaTime;
             yield return null;
         }
-        cameraTransform.localPosition = OriginalPos;
-        handsTransform.localPosition = OriginalPos;
+        cameraTransform.localPosition = camPos;
+        handsTransform.localPosition = handPos;
     }
 
     public void SetCanDoubleJump()

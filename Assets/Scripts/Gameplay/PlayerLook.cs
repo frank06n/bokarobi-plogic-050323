@@ -4,12 +4,10 @@ public class PlayerLook : MonoBehaviour
 {
 
     [SerializeField] private float mouseSensitivity = 2f;
-    [SerializeField] private Transform handsTransform;
     [SerializeField] private Vector3 offset;
     private Transform cameraTransform;
 
     private float cameraVerticalRotation = 0f;
-    private Vector3 handsRotationSmoothVelocity;
 
     void Awake()
     {
@@ -22,11 +20,6 @@ public class PlayerLook : MonoBehaviour
 
         RotateCameraVertically(inputY);
         RotateHorizontally(inputX);
-    }
-
-    private void LateUpdate ()
-    {
-        handsTransform.forward = Vector3.SmoothDamp(handsTransform.forward, cameraTransform.forward, ref handsRotationSmoothVelocity, 0.05f);
     }
 
     private void RotateCameraVertically(float inputY)

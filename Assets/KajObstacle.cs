@@ -25,6 +25,10 @@ public class KajObstacle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name.Equals("Zombie Attack"))
+            return;
+
+
         Vector3 pos = transform.position;
         float decStr = Time.deltaTime / strafeTime;
 

@@ -22,7 +22,7 @@ public class LevelManager : MonoBehaviour
 
     private int collectedKeys;
     private int totalKeys;
-    private FinishPortalLogic finishPortal;
+    private PortalControl finishPortal;
 
     void Awake()
     {
@@ -32,7 +32,7 @@ public class LevelManager : MonoBehaviour
         }
         instance = this;
 
-        finishPortal = FindObjectOfType<FinishPortalLogic>();
+        finishPortal = FindObjectOfType<PortalControl>();
 
         gameOver = false;
 
@@ -54,7 +54,12 @@ public class LevelManager : MonoBehaviour
 
     public void OnPlayerCollectKey()
     {
-        if (++collectedKeys == totalKeys) finishPortal.TurnOn();
+        if (++collectedKeys == totalKeys)
+        {
+            finishPortal.TurnOn();
+            AudioManager.instance.Play(Audio.ORB_ACTIVE);
+            AudioManager.instance.Stop(Audio.M_AMBIENCE);
+        }
     }
 
     public IEnumerator DieAfter(float t)

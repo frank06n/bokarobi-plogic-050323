@@ -23,7 +23,7 @@ public class FinishPortalLogic : MonoBehaviour
     public void TurnOn()
     {
         SetState(true);
-        AudioManager.instance.Play(Audio.ORB_ACTIVE);
+        //AudioManager.instance.Play(Audio.ORB_ACTIVE);
     }
 
     private void SetState(bool on)

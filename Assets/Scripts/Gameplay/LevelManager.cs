@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,6 +20,7 @@ public class LevelManager : MonoBehaviour
     public LayerMask ground;
 
     [HideInInspector] public bool gameOver;
+    [HideInInspector] public List<ObstacleController> obstacles;
 
     private int collectedKeys;
     private int totalKeys;
@@ -38,6 +40,8 @@ public class LevelManager : MonoBehaviour
 
         totalKeys = GameObject.FindGameObjectsWithTag("pickup_sp").Length;
         collectedKeys = 0;
+
+        obstacles = new List<ObstacleController>();
     }
 
     private void Start()
@@ -59,6 +63,9 @@ public class LevelManager : MonoBehaviour
             finishPortal.TurnOn();
             AudioManager.instance.Play(Audio.ORB_ACTIVE);
             AudioManager.instance.Stop(Audio.M_AMBIENCE);
+            foreach (ObstacleController obst in obstacles) {
+                obst.SetDead();
+            }
         }
     }
 

@@ -1,149 +1,15 @@
 fileFormatVersion: 2
-guid: c4af00f3979aebc438a2a56af7737aaa
+guid: bd1f2786ec569f443ac7be1bfc0a19e7
 ModelImporter:
   serializedVersion: 21300
-  internalIDToNameTable: []
-  externalObjects:
+  internalIDToNameTable:
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Bodymat
-    second: {fileID: 2100000, guid: e117d27fc0b6cbc498d74f1ebe026d16, type: 2}
+      74: -203655887218126122
+    second: Death From Front Headshot (1)
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Bottommat
-    second: {fileID: 2100000, guid: 70140aeabce9b3945a1a829f0f350126, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Eyelashmat
-    second: {fileID: 2100000, guid: f68e4106e58004440a947663485646fa, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Hairmat
-    second: {fileID: 2100000, guid: b3e204d0d3dfc744a868535cfc001884, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Shoesmat
-    second: {fileID: 2100000, guid: a925c3e90e2cf9d4a9a8ed8f45c21736, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Topmat
-    second: {fileID: 2100000, guid: d853f89660f65b44fbb47b48c935578f, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Body_Diffuse
-    second: {fileID: 2800000, guid: 94019a82b51ab434789fc5b717404a82, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Body_Gloss
-    second: {fileID: 2800000, guid: 760538baa367f094c9b8405ad7217c8a, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Body_Normal
-    second: {fileID: 2800000, guid: e4e9e216b52b4fd4e9c4f1a0302fdf94, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Body_Opacity
-    second: {fileID: 2800000, guid: 954c5475d096e064596bae2f153ffd44, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Body_Specular
-    second: {fileID: 2800000, guid: b5f8eeda0a3fdf043b977407d5ab61d5, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Bottom_Diffuse
-    second: {fileID: 2800000, guid: 9d81211eaaefb8e498eef06fa14f3da7, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Bottom_Gloss
-    second: {fileID: 2800000, guid: 926b60ca5fa24f04c8625b3e4c1c8b4f, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Bottom_Normal
-    second: {fileID: 2800000, guid: 9f225cc6cfe4aaa41b9b33a5822657c0, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Bottom_Specular
-    second: {fileID: 2800000, guid: c96e2dcc4baa212438a87449e47c79a1, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Hair_Diffuse
-    second: {fileID: 2800000, guid: afd4724e9780a0e4591eee690d2a8e55, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Hair_Gloss
-    second: {fileID: 2800000, guid: 63fdb1576e84e4c45b736924f47113fa, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Hair_Normal
-    second: {fileID: 2800000, guid: b7b87e72007135c4a91f439c8fd8e682, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Hair_Opacity
-    second: {fileID: 2800000, guid: c1aefd135d808a74485ad1f3d14f218d, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Hair_Specular
-    second: {fileID: 2800000, guid: 26e2895576d04454eb2c6c918312c2fa, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Shoes_Diffuse
-    second: {fileID: 2800000, guid: 222f12af38202124ab18d660461532d2, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Shoes_Gloss
-    second: {fileID: 2800000, guid: a74410329469d234dbd42a24da1b2071, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Shoes_Normal
-    second: {fileID: 2800000, guid: 0ce806f87f73206449186b4e685500e9, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Shoes_Specular
-    second: {fileID: 2800000, guid: 4896895a6691f3c4f9e832c3deb0ae6a, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Top_Diffuse
-    second: {fileID: 2800000, guid: d2c1079f11a1e8f4193d7a56243dc660, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Top_Gloss
-    second: {fileID: 2800000, guid: 6e7be2c0fc066dc42ae036038debdc29, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Top_Normal
-    second: {fileID: 2800000, guid: a3084a85ae7526541914313ffe8dd5d5, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Remy_Top_Specular
-    second: {fileID: 2800000, guid: 85c2d0d71b207f64ca4b9de87b7db3e7, type: 3}
+      74: 3724150391426256123
+    second: Death From Front Headshot
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -171,7 +37,36 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Death From Front Headshot
+      takeName: mixamo.com
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 85
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 1
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -215,12 +110,7 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  referencedClips:
-  - 93f6b4fb40e38024080ca8bc40c2c2ff
-  - bd1f2786ec569f443ac7be1bfc0a19e7
-  - 7a8559f603ce3d0428c6993227565e00
-  - 17458130f2a7098498501a4450eec12f
-  - a73048ab4de4eb44db99236e4bb6a299
+  referencedClips: []
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
@@ -1045,11 +935,11 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: c4af00f3979aebc438a2a56af7737aaa, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0

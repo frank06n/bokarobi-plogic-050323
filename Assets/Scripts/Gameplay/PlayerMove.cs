@@ -137,6 +137,7 @@ public class PlayerMove : MonoBehaviour
     {
         isJumping = isDoubleJumping = false;
         StartCoroutine(JumpShake());
+        velocity.y = 0;
         AudioManager.instance.Play(Audio.JUMP_IMPACT);
     }
     void DoJump()

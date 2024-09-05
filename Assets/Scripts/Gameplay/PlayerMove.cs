@@ -16,6 +16,10 @@ public class PlayerMove : MonoBehaviour
 
     [Header("Jump Config")]
     [SerializeField] private float JumpHeight;
+    [SerializeField] private float JumpAfterAerialBuffer;
+    [SerializeField] private float JumpAfterPressBuffer;
+
+    [Header("Jump Shake Config")]
     [SerializeField] private AnimationCurve JumpShakeCurve;
     [SerializeField] private float JumpShakeDuration;
     [SerializeField] private float JumpShakeMagnitude;
@@ -29,6 +33,9 @@ public class PlayerMove : MonoBehaviour
     private bool canDoubleJump;
     private bool isJumping;
     private bool isDoubleJumping;
+
+    private float lastGrounded=99;
+    private float lastJumpPressed=99;
 
 
 
@@ -49,6 +56,8 @@ public class PlayerMove : MonoBehaviour
         isGrounded = IsGrounded();
 
         if (wasJumping && isGrounded) OnJumpLanded();
+
+        UpdateJumpBuffers();
 
         CheckJump();
         CheckMove();
@@ -99,13 +108,30 @@ public class PlayerMove : MonoBehaviour
         handsAnimator.SetBool("Jump", isJumping);
     }
 
+    void UpdateJumpBuffers()
+    {
+        lastGrounded = isGrounded ? 0 : (lastGrounded + Time.deltaTime);
+        lastJumpPressed += Time.deltaTime;
+    }
+
     void CheckJump()
     {
         bool jumpPressed = Input.GetKeyDown(KeyCode.Space);
 
-        if      (!jumpPressed) return;
-        else if (isGrounded)   DoJump();
-        else if (isJumping && canDoubleJump && !isDoubleJumping)
+        if (jumpPressed) lastJumpPressed = 0;
+
+        bool validJumpPress = lastJumpPressed <= JumpAfterPressBuffer;
+        bool validGrounded = lastGrounded <= JumpAfterAerialBuffer;
+
+        if (jumpPressed && validGrounded)
+        {
+            DoJump();
+        }
+        else if (validJumpPress && isGrounded)
+        {
+            DoJump();
+        }
+        else if (jumpPressed && isJumping && canDoubleJump && !isDoubleJumping)
         {
             DoDoubleJump();
         }
@@ -156,19 +182,26 @@ public class PlayerMove : MonoBehaviour
 
     IEnumerator JumpShake()
     {
-        float magnitude = JumpShakeMagnitude * velocity.y / -100f;
-        float elapsed = 0;
+        if (JumpShakeDuration <= 0f || JumpShakeMagnitude <= 0f)
+            yield break; // Early exit if values don't make sense
+
+        float shakeMagnitude = JumpShakeMagnitude * velocity.y / -100f;
+        float elapsedTime = 0;
+
         Vector3 camPos = cameraTransform.localPosition;
         Vector3 handPos = handsTransform.localPosition;
 
-        while (elapsed < JumpShakeDuration)
+        // for simulating different head/eye & hands movement
+        const float handsShakeMultiplier = 1.2f;
+
+        while (elapsedTime < JumpShakeDuration)
         {
-            Vector3 offset = Vector3.down * magnitude * JumpShakeCurve.Evaluate(elapsed / JumpShakeDuration);
+            Vector3 offset = Vector3.down * shakeMagnitude * JumpShakeCurve.Evaluate(elapsedTime / JumpShakeDuration);
             
             cameraTransform.localPosition = camPos + offset;
-            handsTransform.localPosition = handPos + 1.2f * offset;
+            handsTransform.localPosition = handPos + handsShakeMultiplier * offset;
 
-            elapsed += Time.deltaTime;
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
         cameraTransform.localPosition = camPos;

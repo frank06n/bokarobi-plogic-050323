@@ -27698,6 +27698,8 @@ MonoBehaviour:
   gc_SphereRadius: 0.5
   gc_FootOffsetY: -0.589
   JumpHeight: 4
+  JumpAfterAerialBuffer: 0.15
+  JumpAfterPressBuffer: 0.1
   JumpShakeCurve:
     serializedVersion: 2
     m_Curve:
@@ -27749,8 +27751,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  JumpShakeDuration: 1
-  JumpShakeMagnitude: 1
+  JumpShakeDuration: 0.6
+  JumpShakeMagnitude: 0.8
 --- !u!1001 &6530377820973125001
 PrefabInstance:
   m_ObjectHideFlags: 0

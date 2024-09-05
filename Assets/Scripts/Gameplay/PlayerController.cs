@@ -4,32 +4,28 @@ public class PlayerController : MonoBehaviour
 {
     private PlayerMove playerMove;
     private const float YDeathThreshold = -100;
+    private bool dead = false;
 
     void Awake()
     {
         playerMove = GetComponent<PlayerMove>();
     }
 
-    void Update()
-    {
-        CheckFallenToDeath();
-    }
-    void CheckFallenToDeath()
-    {
-        if (transform.position.y < YDeathThreshold)
-        {
-            SetDead();
-        }
-    }
-
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        if (dead) return;
+        
         GameObject hitObject = hit.gameObject;
 
         if (hitObject.CompareTag(Interactable.Cactus))
         {
             SetDead();
+        }
+        else if (hitObject.CompareTag(Interactable.DeathY))
+        {
+            SetDead();
+            Destroy(hitObject);
         }
         else if (hitObject.CompareTag(Interactable.WinOrb))
         {
@@ -57,15 +53,18 @@ public class PlayerController : MonoBehaviour
 
     private void SetDead()
     {
-        bool won = false;
+        dead = true;
         playerMove.SetImmobile(1f);
+        AudioManager.instance.Play(Audio.DEATH);
+
+        bool won = false;
         LevelManager.instance.SetGameOver(won);
     }
 
     private void SetWon()
     {
-        bool won = true;
         playerMove.SetImmobile(1f);
+        bool won = true;
         LevelManager.instance.SetGameOver(won);
     }
 }

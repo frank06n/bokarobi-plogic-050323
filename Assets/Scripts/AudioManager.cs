@@ -5,7 +5,7 @@ using UnityEngine.Audio;
 public enum Audio
 {
     JUMP, JUMP_IMPACT, WALK, KEY_PICKED, DOUBLEJUMP_PICKED, ORB_ACTIVE,
-    M_AMBIENCE, M_VICTORY
+    M_AMBIENCE, M_VICTORY, DEATH
 }
 
 

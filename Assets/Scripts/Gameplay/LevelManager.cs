@@ -11,6 +11,7 @@ public static class Interactable
     public static readonly string WinOrb = "win";
     public static readonly string Pickup_Key = "pickup_sp";
     public static readonly string Pickup_DoubleJump = "pickup_dj";
+    public static readonly string DeathY = "death_y";
 }
 
 public class LevelManager : MonoBehaviour
@@ -55,7 +56,7 @@ public class LevelManager : MonoBehaviour
         AudioManager.instance.MarkAsMusic(Audio.M_VICTORY);
 
         AudioManager.instance.SetLooping(Audio.M_AMBIENCE, true);
-        AudioManager.instance.SetVolume(Audio.M_AMBIENCE,0.5f);
+        AudioManager.instance.SetVolume(Audio.M_AMBIENCE,0.3f);
         AudioManager.instance.Play(Audio.M_AMBIENCE);
 
         SetCursorVisible(false);

@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private PlayerMove playerMove;
-    private readonly float YDeathThreshold = -100;
+    private const float YDeathThreshold = -100;
 
     void Awake()
     {
@@ -18,8 +18,7 @@ public class PlayerController : MonoBehaviour
     {
         if (transform.position.y < YDeathThreshold)
         {
-            //PlaySfx("falldead");
-            DieAfter(0);
+            SetDead();
         }
     }
 
@@ -30,8 +29,7 @@ public class PlayerController : MonoBehaviour
 
         if (hitObject.CompareTag(Interactable.Cactus))
         {
-            //play dead sfx
-            DieAfter(1);
+            SetDead();
         }
         else if (hitObject.CompareTag(Interactable.WinOrb))
         {
@@ -40,8 +38,7 @@ public class PlayerController : MonoBehaviour
                 LevelManager.instance.finishPortal.DestroyEntryCollider();
 
                 AudioManager.instance.Play(Audio.M_VICTORY);
-                //LevelManager.instance.audioMng.Stop("bg");
-                DieAfter(4);
+                SetWon();
             }
         }
         else if (hitObject.CompareTag(Interactable.Pickup_DoubleJump))
@@ -53,18 +50,22 @@ public class PlayerController : MonoBehaviour
         else if (hitObject.CompareTag(Interactable.Pickup_Key))
         {
             AudioManager.instance.Play(Audio.KEY_PICKED);
-            LevelManager.instance.OnPlayerCollectKey();// add score
+            LevelManager.instance.OnPlayerCollectKey();
             Destroy(hitObject);
         }
     }
 
-    private void DieAfter(float time)
+    private void SetDead()
     {
-        StartCoroutine(LevelManager.instance.DieAfter(time));
+        bool won = false;
+        playerMove.SetImmobile(1f);
+        LevelManager.instance.SetGameOver(won);
     }
 
-    //private void OnDrawGizmosSelected()
-    //{
-    //    Gizmos.DrawSphere(transform.position + Vector3.up*footYoffset, sphereRadius);
-    //}
+    private void SetWon()
+    {
+        bool won = true;
+        playerMove.SetImmobile(1f);
+        LevelManager.instance.SetGameOver(won);
+    }
 }

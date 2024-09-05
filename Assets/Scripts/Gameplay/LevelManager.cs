@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 
 public static class Interactable
@@ -25,6 +26,10 @@ public class LevelManager : MonoBehaviour
     private int collectedKeys;
     private int totalKeys;
     [HideInInspector] public PortalControl finishPortal;
+
+    [SerializeField] private TextMeshProUGUI hud_Keys;
+    [SerializeField] private GameObject hudCrosshair;
+    [SerializeField] private PopUpPanelController popUpPanelController;
 
     void Awake()
     {
@@ -54,11 +59,15 @@ public class LevelManager : MonoBehaviour
         AudioManager.instance.Play(Audio.M_AMBIENCE);
 
         SetCursorVisible(false);
+        UpdateHUD_Keys();
     }
 
     public void OnPlayerCollectKey()
     {
-        if (++collectedKeys == totalKeys)
+        collectedKeys += 1;
+        UpdateHUD_Keys();
+
+        if (collectedKeys == totalKeys)
         {
             finishPortal.TurnOn();
             AudioManager.instance.Play(Audio.ORB_ACTIVE);
@@ -69,12 +78,22 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public IEnumerator DieAfter(float t)
+    void UpdateHUD_Keys()
+    {
+        hud_Keys.text = $"{collectedKeys:D2} / {totalKeys:D2}";
+    }
+
+    public void Btn_Retry()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void SetGameOver(bool win)
     {
         gameOver = true;
-        yield return new WaitForSeconds(t);
-        SetCursorVisible(false);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        hudCrosshair.SetActive(false);
+        SetCursorVisible(true);
+        popUpPanelController.ShowPanel(win ? "Level Clear!" : "You Died!");
     }
 
     private void SetCursorVisible(bool visible)

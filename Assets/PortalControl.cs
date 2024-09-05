@@ -38,6 +38,7 @@ public class PortalControl : MonoBehaviour
         turnedOn = true;
         portalPS_obj.SetActive(true);
         portalLight_obj.SetActive(true);
+        portalEntryCollider_obj.SetActive(true);
         StartCoroutine(TogglePortalSpin(5f, true));
         portal_obj.GetComponent<Renderer>().material = portalLitMat;
         portalSfx.Play();

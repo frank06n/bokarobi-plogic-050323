@@ -30,9 +30,11 @@ public class PlayerMove : MonoBehaviour
 
     private bool isWalking;
     private bool isGrounded;
+    private bool canJump;
     private bool canDoubleJump;
     private bool isJumping;
     private bool isDoubleJumping;
+    private bool immobile;
 
     private float lastGrounded=99;
     private float lastJumpPressed=99;
@@ -42,8 +44,10 @@ public class PlayerMove : MonoBehaviour
     void Awake()
     {
         controller = GetComponent<CharacterController>();
+        canJump = true;
         canDoubleJump = false;
         isWalking = false;
+        immobile = false;
 
         cameraTransform = transform.GetChild(0);
         handsTransform = transform.GetChild(1);
@@ -52,6 +56,8 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        if (immobile) return;
+
         bool wasJumping = isJumping;
         isGrounded = IsGrounded();
 
@@ -116,6 +122,8 @@ public class PlayerMove : MonoBehaviour
 
     void CheckJump()
     {
+        if (!canJump) return;
+        
         bool jumpPressed = Input.GetKeyDown(KeyCode.Space);
 
         if (jumpPressed) lastJumpPressed = 0;
@@ -208,8 +216,36 @@ public class PlayerMove : MonoBehaviour
         handsTransform.localPosition = handPos;
     }
 
+    IEnumerator SlowDownAndImmobilize(float slowTime)
+    {
+        float elapsedTime = 0, initialSpeed = Speed;
+        PlayerLook pLook = GetComponent<PlayerLook>();
+        canJump = false;
+
+        while (elapsedTime<slowTime)
+        {
+            float inv_t = 1f - (elapsedTime / slowTime);
+            Speed = initialSpeed * inv_t;
+            pLook.SetSensitivityMultiplier(inv_t);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        Speed = 0;
+        pLook.SetSensitivityMultiplier(0);
+        immobile = true;
+
+        handsAnimator.SetBool("Run", false);
+        handsAnimator.SetBool("Jump", false);
+        AudioManager.instance.Stop(Audio.WALK);
+    }
+
     public void SetCanDoubleJump()
     {
         canDoubleJump = true;
+    }
+
+    public void SetImmobile(float slowTime)
+    {
+        StartCoroutine(SlowDownAndImmobilize(slowTime));
     }
 }

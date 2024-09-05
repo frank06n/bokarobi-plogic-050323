@@ -24,7 +24,7 @@ public class LevelManager : MonoBehaviour
 
     private int collectedKeys;
     private int totalKeys;
-    private PortalControl finishPortal;
+    [HideInInspector] public PortalControl finishPortal;
 
     void Awake()
     {

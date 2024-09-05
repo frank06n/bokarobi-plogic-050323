@@ -3,13 +3,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private PlayerMove playerMove;
-    private FinishPortalLogic finishPortal;
     private readonly float YDeathThreshold = -100;
 
     void Awake()
     {
         playerMove = GetComponent<PlayerMove>();
-        finishPortal = FindObjectOfType<FinishPortalLogic>();
     }
 
     void Update()
@@ -37,8 +35,10 @@ public class PlayerController : MonoBehaviour
         }
         else if (hitObject.CompareTag(Interactable.WinOrb))
         {
-            if (finishPortal.isOn())
+            if (LevelManager.instance.finishPortal.IsOn())
             {
+                LevelManager.instance.finishPortal.DestroyEntryCollider();
+
                 AudioManager.instance.Play(Audio.M_VICTORY);
                 //LevelManager.instance.audioMng.Stop("bg");
                 DieAfter(4);

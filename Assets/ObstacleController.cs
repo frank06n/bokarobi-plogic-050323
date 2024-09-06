@@ -57,7 +57,14 @@ public class ObstacleController : MonoBehaviour
 
     private void Start()
     {
-        LevelManager.instance.obstacles.Add(this);
+        if (LevelManager.instance == null)
+        {
+            Debug.LogWarning("LevelManager Not found! assumming Level Selector Scene");
+        }
+        else
+        {
+            LevelManager.instance.obstacles.Add(this);
+        }
     }
 
 

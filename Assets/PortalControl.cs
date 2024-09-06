@@ -24,15 +24,6 @@ public class PortalControl : MonoBehaviour
         spinAnim.speed = 0;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            TurnOn();
-        }
-    }
-
     public void TurnOn()
     {
         turnedOn = true;

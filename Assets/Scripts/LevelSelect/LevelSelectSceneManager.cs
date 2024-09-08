@@ -6,11 +6,21 @@ using TMPro;
 
 public class LevelSelectSceneManager : MonoBehaviour
 {
+    public static LevelSelectSceneManager instance;
     public Button[] buttons;
     public int LevelCount;
 
     public CanvasGroup MainmenuPanel, LevelsPanel;
     [HideInInspector] public static bool ShouldShowLevels = false;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(this);
+        }
+        instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()

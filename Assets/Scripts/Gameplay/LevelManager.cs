@@ -20,6 +20,7 @@ public class LevelManager : MonoBehaviour
 
     public float gravity;
     public LayerMask ground;
+    public LayerMask obstacles_layer;
 
     [HideInInspector] public bool gameOver;
     [HideInInspector] public List<ObstacleController> obstacles;

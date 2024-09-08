@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028608, g: 0.22571623, b: 0.3069252, a: 1}
+  m_IndirectSpecularColor: {r: 0.06133959, g: 0.08381029, b: 0.11819737, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5188,6 +5188,9 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 64
+  obstacles_layer:
+    serializedVersion: 2
+    m_Bits: 128
   gameOver: 0
   obstacles: []
   finishPortal: {fileID: 0}
@@ -10123,14 +10126,6 @@ PrefabInstance:
     - target: {fileID: 8152316830095298499, guid: fa5951546b8907045abfbd8ba66cdc1f, type: 3}
       propertyPath: m_Name
       value: Obstacle (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 8152316830095298499, guid: fa5951546b8907045abfbd8ba66cdc1f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8152316830095298499, guid: fa5951546b8907045abfbd8ba66cdc1f, type: 3}
-      propertyPath: m_TagString
-      value: cactus
       objectReference: {fileID: 0}
     - target: {fileID: 8820590529045894521, guid: fa5951546b8907045abfbd8ba66cdc1f, type: 3}
       propertyPath: m_RootOrder

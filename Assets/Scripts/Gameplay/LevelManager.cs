@@ -59,6 +59,8 @@ public class LevelManager : MonoBehaviour
         AudioManager.instance.SetVolume(Audio.M_AMBIENCE,0.3f);
         AudioManager.instance.Play(Audio.M_AMBIENCE);
 
+        AudioManager.instance.SetVolume(Audio.KEY_PICKED, 0.6f);
+
         SetCursorVisible(false);
         UpdateHUD_Keys();
     }
@@ -87,6 +89,20 @@ public class LevelManager : MonoBehaviour
     public void Btn_Retry()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void Btn_Levels()
+    {
+        LevelSelectSceneManager.ShouldShowLevels = true;
+        SceneManager.LoadScene(0);
+    }
+    public void Btn_Next()
+    {
+        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
+            Btn_Levels();
+        else
+            SceneManager.LoadScene(nextSceneIndex);
     }
 
     public void SetGameOver(bool win)

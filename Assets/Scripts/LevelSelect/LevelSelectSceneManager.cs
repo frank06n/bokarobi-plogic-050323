@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -8,6 +8,9 @@ public class LevelSelectSceneManager : MonoBehaviour
 {
     public Button[] buttons;
     public int LevelCount;
+
+    public CanvasGroup MainmenuPanel, LevelsPanel;
+    [HideInInspector] public static bool ShouldShowLevels = false;
 
     // Start is called before the first frame update
     void Start()
@@ -26,16 +29,72 @@ public class LevelSelectSceneManager : MonoBehaviour
 
         for (int i=0; i<buttons.Length; i++)
         {
+            int level = i + 1;
             TextMeshProUGUI text = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
-            text.text = (i + 1).ToString();
+            text.text = level.ToString();
 
             if (i >= LevelCount) buttons[i].interactable = false;
+            buttons[i].onClick.AddListener(() => SceneManager.LoadScene(level));
+        }
+
+        // set active, if was set inactive during development
+        MainmenuPanel.gameObject.SetActive(true);
+        LevelsPanel.gameObject.SetActive(true);
+
+        if (LevelSelectSceneManager.ShouldShowLevels)
+        {
+            LevelSelectSceneManager.ShouldShowLevels = false;
+            SetPanelActive(LevelsPanel, true);
+            SetPanelActive(MainmenuPanel, false);
+        }
+        else
+        {
+            SetPanelActive(MainmenuPanel, true);
+            SetPanelActive(LevelsPanel, false);
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SetPanelActive(CanvasGroup panel, bool active)
     {
-        
+        panel.alpha = active ? 1 : 0;
+        panel.interactable = active;
+        panel.blocksRaycasts = active;
+    }
+
+    public void ShowLevels()
+    {
+        StartCoroutine(SwitchPanels(MainmenuPanel, LevelsPanel));
+    }
+    public void ShowMainMenu()
+    {
+        StartCoroutine(SwitchPanels(LevelsPanel, MainmenuPanel));
+    }
+
+    IEnumerator SwitchPanels(CanvasGroup toHide, CanvasGroup toShow)
+    {
+        const float SwitchDuration = 0.8f;
+        const float HalfSD = SwitchDuration / 2f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < HalfSD)
+        {
+            toHide.alpha = 1 - (elapsedTime / HalfSD);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        SetPanelActive(toHide, false);
+
+        while (elapsedTime < SwitchDuration)
+        {
+            toShow.alpha = (elapsedTime - HalfSD) / HalfSD;
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        SetPanelActive(toShow, true);
+    }
+    
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

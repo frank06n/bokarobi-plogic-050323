@@ -30,9 +30,9 @@ public class LevelSelectSceneManager : MonoBehaviour
         AudioManager.instance.SetLooping(Audio.LEVELSELECT, true);
         AudioManager.instance.SetVolume(Audio.LEVELSELECT, 0.5f);
         AudioManager.instance.Play(Audio.LEVELSELECT);
-        AudioManager.instance.SetVolume(Audio.ORB_ACTIVE, 0.1f);
+        AudioManager.instance.SetVolume(Audio.PORTAL_ACTIVE, 0.1f);
 
-        PortalControl portal = FindObjectOfType<PortalControl>();
+        PortalControl portal = FindFirstObjectByType<PortalControl>();
         portal.TurnOn();
         portal.GetComponent<AudioSource>().volume = 0.04f;
 

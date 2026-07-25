@@ -59,7 +59,7 @@ public class ObstacleController : MonoBehaviour
     {
         if (LevelManager.instance != null)
         {
-            LevelManager.instance.obstacles.Add(this); 
+            LevelManager.instance.obstacles.Add(this);
         }
         else if (LevelSelectSceneManager.instance == null)
         {
@@ -88,7 +88,7 @@ public class ObstacleController : MonoBehaviour
         }
 
         handleStrafe();
-        handleAttacks();        
+        handleAttacks();
     }
 
     bool CloseToPosition(Vector3 pos)
@@ -251,7 +251,7 @@ public class ObstacleController : MonoBehaviour
         }
     }*/
 
-    
+
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

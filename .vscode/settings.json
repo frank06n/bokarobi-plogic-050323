@@ -54,5 +54,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "bokarobi-plogic-050323.sln"
+    "dotnet.defaultSolution": "bokarobi-plogic-050323.slnx",
+    "editor.tabSize": 4
 }

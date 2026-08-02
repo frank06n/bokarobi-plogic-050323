@@ -3,7 +3,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private PlayerMove playerMove;
-    private const float YDeathThreshold = -100;
     private bool dead = false;
 
     void Awake()
@@ -29,9 +28,19 @@ public class PlayerController : MonoBehaviour
         
         if (other.CompareTag(Interactable.Pickup_Key))
         {
-            if (other.GetComponent<PickupLogic>().TryToCollect()) { 
+            if (other.GetComponent<PickupLogic>().TryToCollect())
+            {
                 AudioManager.instance.Play(Audio.PICKUP_SUPOINT);
                 LevelManager.instance.OnPlayerCollectKey();
+                Destroy(other.gameObject);
+            }
+        }
+        else if (other.CompareTag(Interactable.Pickup_DoubleJump))
+        {
+            if (other.GetComponent<PickupLogic>().TryToCollect())
+            {
+                AudioManager.instance.Play(Audio.PICKUP_DJ);
+                playerMove.SetCanDoubleJump();
                 Destroy(other.gameObject);
             }
         }
@@ -63,18 +72,6 @@ public class PlayerController : MonoBehaviour
                 SetWon();
             }
         }
-        else if (hitObject.CompareTag(Interactable.Pickup_DoubleJump))
-        {
-            AudioManager.instance.Play(Audio.PICKUP_DJ);
-            playerMove.SetCanDoubleJump();
-            Destroy(hitObject);
-        }
-        //else if (hitObject.CompareTag(Interactable.Pickup_Key))
-        //{
-        //    AudioManager.instance.Play(Audio.KEY_PICKED);
-        //    LevelManager.instance.OnPlayerCollectKey();
-        //    Destroy(hitObject);
-        //}
     }
 
     private void SetDead()

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
@@ -36,8 +35,8 @@ public class PlayerMove : MonoBehaviour
     private bool isDoubleJumping;
     private bool immobile;
 
-    private float lastGrounded=99;
-    private float lastJumpPressed=99;
+    private float lastGrounded = 99;
+    private float lastJumpPressed = 99;
 
 
 
@@ -58,8 +57,10 @@ public class PlayerMove : MonoBehaviour
     {
         if (immobile) return;
 
+        if (standingOnPlatform != null) controller.Move(standingOnPlatform.LastMoveDelta);
+
         bool wasJumping = isJumping;
-        isGrounded = IsGrounded();
+        CheckGrounded();
 
         if (wasJumping && isGrounded) OnJumpLanded();
 
@@ -72,10 +73,28 @@ public class PlayerMove : MonoBehaviour
         DoHandBobbing();
     }
 
+    private readonly Collider[] groundHits = new Collider[1];
+    private Platform standingOnPlatform = null;
 
-    private bool IsGrounded()
+    private void CheckGrounded()
     {
-        return Physics.CheckSphere(transform.position + Vector3.up * gc_FootOffsetY, gc_SphereRadius, LevelManager.instance.ground) && velocity.y <= 0;
+        int hitCount = Physics.OverlapSphereNonAlloc(
+            transform.position + Vector3.up * gc_FootOffsetY,
+            gc_SphereRadius,
+            groundHits,
+            LevelManager.instance.ground
+        );
+        isGrounded = hitCount > 0;
+        standingOnPlatform = null;
+
+        if (isGrounded)
+        {
+            standingOnPlatform = groundHits[0].GetComponent<Platform>();
+            if (standingOnPlatform == null)
+            {
+                Debug.Log("Standing on non-platform object: " + groundHits[0].name);
+            }
+        }
     }
     private bool IsWalking()
     {
@@ -123,7 +142,7 @@ public class PlayerMove : MonoBehaviour
     void CheckJump()
     {
         if (!canJump) return;
-        
+
         bool jumpPressed = Input.GetKeyDown(KeyCode.Space);
 
         if (jumpPressed) lastJumpPressed = 0;
@@ -205,7 +224,7 @@ public class PlayerMove : MonoBehaviour
         while (elapsedTime < JumpShakeDuration)
         {
             Vector3 offset = Vector3.down * shakeMagnitude * JumpShakeCurve.Evaluate(elapsedTime / JumpShakeDuration);
-            
+
             cameraTransform.localPosition = camPos + offset;
             handsTransform.localPosition = handPos + handsShakeMultiplier * offset;
 
@@ -222,7 +241,7 @@ public class PlayerMove : MonoBehaviour
         PlayerLook pLook = GetComponent<PlayerLook>();
         canJump = false;
 
-        while (elapsedTime<slowTime)
+        while (elapsedTime < slowTime)
         {
             float inv_t = 1f - (elapsedTime / slowTime);
             Speed = initialSpeed * inv_t;
